@@ -1,6 +1,12 @@
 import { useState, useRef } from "react";
 import { checkValidData } from "../Utils/validate";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../Utils/firebase";
 
 type formType = "sign in" | "sign up";
 
@@ -37,7 +43,41 @@ const Login = () => {
       passwordValue,
       formType
     );
-    setErrorMessage(message);
+
+    setErrorMessage(message === "Success" ? "" : message);
+    if (message === "Success") {
+      //create a new user
+      if (formType === "sign up") {
+        //signup logic
+        createUserWithEmailAndPassword(auth, emailValue, passwordValue)
+          .then((userCredential) => {
+            const user = userCredential.user;
+            console.log(user);
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            setErrorMessage(errorCode + "-" + errorMessage);
+          });
+      } else {
+        //sign in logic
+        signInWithEmailAndPassword(auth, emailValue, passwordValue)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            console.log(user);
+            // ...
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const customErrorMessage =
+              errorCode === "auth/invalid-login-credentials"
+                ? "Either Email or Password you have enterd is Incorrect!"
+                : "";
+            setErrorMessage(customErrorMessage);
+          });
+      }
+    }
   };
 
   return (
@@ -48,14 +88,16 @@ const Login = () => {
           className="bg-black bg-opacity-80 w-3/12 2xl:w-2/12 flex flex-col z-10 rounded-xl"
         >
           <div className="flex justify-between">
-            <h1 className="text-white font-bold text-2xl ml-2 my-4">
+            <h1 className="text-white font-bold text-2xl ml-2 my-4 w-4/12">
               {formType === "sign in"
                 ? "Sign In"
                 : formType === "sign up"
                 ? "Sign Up"
                 : ""}
             </h1>
-            <p className="text-red-600 font-bold mr-2 my-5 ">{errorMessage}</p>
+            <p className="text-red-600 font-bold mr-2 my-5 w-8/12 ">
+              {errorMessage}
+            </p>
           </div>
           {formType === "sign up" && (
             <input
