@@ -5,12 +5,20 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../Utils/firebase";
+import { useNavigate } from "react-router-dom";
+import Header from "./Header";
+import { useDispatch } from "react-redux";
+import { addUser } from "../Utils/userSlice";
 
 type formType = "sign in" | "sign up";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [formType, setFormType] = useState<formType>("sign in");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -53,6 +61,28 @@ const Login = () => {
           .then((userCredential) => {
             const user = userCredential.user;
             console.log(user);
+            updateProfile(user, {
+              displayName: fullNameValue,
+              photoURL:
+                "https://lh3.googleusercontent.com/a/ACg8ocJLWl_F1zSjZDfD5U_ZRFgXtyp2HSSsWW9lp2TMP7FOSCA=s96-c-rg-br100",
+            })
+              .then(() => {
+                const { uid, email, displayName, photoURL } = user;
+                dispatch(
+                  addUser({
+                    uid: uid,
+                    email: email,
+                    displayName: displayName,
+                    photoURL: photoURL,
+                  })
+                );
+                navigate("/browse");
+              })
+              .catch((error) => {
+                // An error occurred
+                // ...
+                setErrorMessage(error.message);
+              });
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -65,7 +95,17 @@ const Login = () => {
           .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            console.log(user);
+            const { uid, email, displayName, photoURL } = user;
+            dispatch(
+              addUser({
+                uid: uid,
+                email: email,
+                displayName: displayName,
+                photoURL: photoURL,
+              })
+            );
+            navigate("/browse");
+
             // ...
           })
           .catch((error) => {
@@ -82,6 +122,7 @@ const Login = () => {
 
   return (
     <>
+      <Header />
       <div className="h-screen bg-[url(https://assets.nflxext.com/ffe/siteui/vlv3/77d35039-751f-4c3e-9c8d-1240c1ca6188/cf244808-d722-428f-80a9-052acdf158ec/IN-en-20231106-popsignuptwoweeks-perspective_alpha_website_large.jpg)] flex justify-center items-center ">
         <form
           onSubmit={handleSubmit}
