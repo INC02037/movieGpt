@@ -29,7 +29,7 @@ const Header = () => {
   };
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         const { uid, email } = user;
         dispatch(
@@ -44,6 +44,8 @@ const Header = () => {
         navigate("/");
       }
     });
+    //unsubscribe when component unmount
+    return () => unsubscribe();
   }, []);
 
   return (

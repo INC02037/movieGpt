@@ -10,6 +10,7 @@ import { auth } from "../Utils/firebase";
 import Header from "./Header";
 import { useDispatch } from "react-redux";
 import { addUser } from "../Utils/userSlice";
+import { NETFLIX_LOGO, USER_LOGO } from "../Utils/constant";
 
 type formType = "sign in" | "sign up";
 
@@ -60,8 +61,7 @@ const Login = () => {
             console.log(user);
             updateProfile(user, {
               displayName: fullNameValue,
-              photoURL:
-                "https://lh3.googleusercontent.com/a/ACg8ocJLWl_F1zSjZDfD5U_ZRFgXtyp2HSSsWW9lp2TMP7FOSCA=s96-c-rg-br100",
+              photoURL: USER_LOGO,
             })
               .then(() => {
                 const { uid, email, displayName, photoURL } = user;
@@ -75,8 +75,6 @@ const Login = () => {
                 );
               })
               .catch((error) => {
-                // An error occurred
-                // ...
                 setErrorMessage(error.message);
               });
           })
@@ -118,7 +116,10 @@ const Login = () => {
   return (
     <>
       <Header />
-      <div className="h-screen bg-[url(https://assets.nflxext.com/ffe/siteui/vlv3/77d35039-751f-4c3e-9c8d-1240c1ca6188/cf244808-d722-428f-80a9-052acdf158ec/IN-en-20231106-popsignuptwoweeks-perspective_alpha_website_large.jpg)] flex justify-center items-center ">
+      <div
+        className="h-screen flex justify-center items-center "
+        style={{ backgroundImage: `url(${NETFLIX_LOGO})` }}
+      >
         <form
           onSubmit={handleSubmit}
           className="bg-black bg-opacity-80 w-3/12 2xl:w-2/12 flex flex-col z-10 rounded-xl"
