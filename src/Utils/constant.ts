@@ -3,3 +3,12 @@ export const NETFLIX_LOGO =
 
 export const USER_LOGO =
   "https://lh3.googleusercontent.com/a/ACg8ocJLWl_F1zSjZDfD5U_ZRFgXtyp2HSSsWW9lp2TMP7FOSCA=s96-c-rg-br100";
+
+export const API_OPTIONS = {
+  method: "GET",
+  headers: {
+    accept: "application/json",
+    Authorization:
+      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIxZTA5OWZiZDNmYTFiYTJhYWNjNGE3ZjBmYjBmYWFjMCIsInN1YiI6IjY1NWRkODZkZDM5OWU2MDE1MGNiNjdmYyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.gLd-4PhzIMKhpX6Gz8Ykqlw9HtYcPrXrUahelytCG2o",
+  },
+};
