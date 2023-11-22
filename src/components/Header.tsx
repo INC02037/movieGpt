@@ -1,9 +1,11 @@
 import netflixLogo from "../assets/netflixLogo.png";
 import userLogo from "../assets/netflix-profile-pictures-1000-x-1000-qo9h82134t9nv0j0.jpg";
-import { signOut } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { auth } from "../Utils/firebase";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { addUser, removeUser } from "../Utils/userSlice";
 
 interface UserType {
   uid: string;
@@ -16,16 +18,34 @@ interface RootState {
 }
 const Header = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user = useSelector((store: RootState) => store?.user);
   const handleSignOut = () => {
     signOut(auth)
-      .then(() => {
-        navigate("/");
-      })
+      .then(() => {})
       .catch((error) => {
         navigate("/error");
       });
   };
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const { uid, email } = user;
+        dispatch(
+          addUser({
+            uid: uid,
+            email: email,
+          })
+        );
+        navigate("/browse");
+      } else {
+        dispatch(removeUser(null));
+        navigate("/");
+      }
+    });
+  }, []);
+
   return (
     <div className="absolute bg-gradient-to-b from-black z-10 w-screen flex justify-between">
       <div>

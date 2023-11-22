@@ -2,13 +2,11 @@ import { useState, useRef } from "react";
 import { checkValidData } from "../Utils/validate";
 import "react-toastify/dist/ReactToastify.css";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../Utils/firebase";
-import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import { useDispatch } from "react-redux";
 import { addUser } from "../Utils/userSlice";
@@ -16,7 +14,6 @@ import { addUser } from "../Utils/userSlice";
 type formType = "sign in" | "sign up";
 
 const Login = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [formType, setFormType] = useState<formType>("sign in");
@@ -76,7 +73,6 @@ const Login = () => {
                     photoURL: photoURL,
                   })
                 );
-                navigate("/browse");
               })
               .catch((error) => {
                 // An error occurred
@@ -104,7 +100,6 @@ const Login = () => {
                 photoURL: photoURL,
               })
             );
-            navigate("/browse");
 
             // ...
           })
